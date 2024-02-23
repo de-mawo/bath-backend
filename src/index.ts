@@ -3,6 +3,7 @@ require('dotenv').config() // Add this otherwise .env variables wont read
 import express from "express";
 import morgan from "morgan";
 import authRoutes from "./routes/auth";
+import courseRoutes from "./routes/auth";
 import passport from "./utils/passport";
 import redisStore from "./utils/redis";
 import session from "express-session";
@@ -16,12 +17,11 @@ const port = process.env.PORT;
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET,POST,PUT, PATCH,DELETE",
     credentials: true,
   })
 );
@@ -48,11 +48,13 @@ app.use(
 app.use(passport.initialize());  // init passport on every route call.
 app.use(passport.session())  // allow passport to use "express-session".
 
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // ROUTES
 app.use("/auth", authRoutes);
+app.use("/api/v1/course", courseRoutes)
 
 
 app.listen(port, () => {

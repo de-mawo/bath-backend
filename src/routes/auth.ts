@@ -10,8 +10,9 @@ router.get("/login", (req, res) => {
 });
 
 // logout
-router.get("/logout", (req, res) => {
-  //
+router.get("/logout", (req, res, done) => {
+  req.logout(done)
+  res.redirect(process.env.CLIENT_URL as string)
 });
 
 //Google auth
@@ -33,7 +34,7 @@ router.get(
 router.get("/session", (req, res) => {
   try {
     if (req.user) {
-      const { id, name, email, image, role } = req.user as User;
+      const { id, name, email, image, role } = req.user as User; // Do not send the id in a production app , this is used for learning purposes
       const filteredUser = { id, name, email, image, role };
       res.send({
         user: filteredUser,
