@@ -30,29 +30,33 @@ export const getAllCourses = async (res: Response) => {
 };
 
 export async function createCourse(req: Request, res: Response) {
-  try {
-    const body: SubmittedCreateData = await req.body();
 
-    const students = ["demostudent@bath.com"]; // Our schema always need to start with a user being part of a course hence this dummy string
-    const slug = slugify(body.title, { lower: true });
-    const { title, category, code, tags } = body;
+  console.log("Mucreation",req.query);
+  
 
-    await prisma.course.create({
-      data: {
-        title,
-        students,
-        slug,
-        category,
-        code,
-        tags,
-      },
-    });
+  // try {
+  //   const body: SubmittedCreateData = await req.body();
 
-    return res.json({ message: "Success" }).status(200);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server error" });
-  }
+  //   const students = ["demostudent@bath.com"]; // Our schema always need to start with a user being part of a course hence this dummy string
+  //   const slug = slugify(body.title, { lower: true });
+  //   const { title, category, code, tags } = body;
+
+  //   await prisma.course.create({
+  //     data: {
+  //       title,
+  //       students,
+  //       slug,
+  //       category,
+  //       code,
+  //       tags,
+  //     },
+  //   });
+
+  //   return res.json({ message: "Success" }).status(200);
+  // } catch (error) {
+  //   console.error(error);
+  //   return res.status(500).json({ error});
+  // }
 }
 
 export async function editCourse(req: Request, res: Response) {

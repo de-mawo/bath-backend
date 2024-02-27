@@ -3,7 +3,7 @@ require('dotenv').config() // Add this otherwise .env variables wont read
 import express from "express";
 import morgan from "morgan";
 import authRoutes from "./routes/auth";
-import courseRoutes from "./routes/auth";
+import courseRoutes from "./routes/course";
 import passport from "./utils/passport";
 import redisStore from "./utils/redis";
 import session from "express-session";
@@ -51,6 +51,12 @@ app.use(passport.session())  // allow passport to use "express-session".
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+ console.log(req.body);
+ 
+  // console.log(req.cookies);
+  next();
+});
 
 // ROUTES
 app.use("/auth", authRoutes);

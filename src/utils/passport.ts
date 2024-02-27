@@ -44,6 +44,8 @@ passport.use(
           },
         });
 
+        //Add a condition here to check allowed users to access the platform
+
         if (!userExist) {
           const newUser = await prisma.user.create({
             data: {
