@@ -2,12 +2,19 @@
 require('dotenv').config() // Add this otherwise .env variables wont read
 import express from "express";
 import morgan from "morgan";
+import bodyParser from 'body-parser';
+import cors from "cors";
 import authRoutes from "./routes/auth";
 import courseRoutes from "./routes/course";
+import moduleRoutes from "./routes/module";
+import projectRoutes from "./routes/project";
+import projectMarksRoutes from "./routes/projectMarks";
+import taskRoutes from "./routes/task";
+import eventRoutes from "./routes/event";
+import userRoutes from "./routes/user";
 import passport from "./utils/passport";
 import redisStore from "./utils/redis";
 import session from "express-session";
-import cors from "cors";
 import { __prod__ } from "./utils/constants";
 
 const app = express();
@@ -21,7 +28,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
-    methods: "GET,POST,PUT, PATCH,DELETE",
+    methods: "GET,POST,PUT,PATCH,DELETE",
     credentials: true,
   })
 );
@@ -50,17 +57,19 @@ app.use(passport.session())  // allow passport to use "express-session".
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use((req, res, next) => {
- console.log(req.body);
- 
-  // console.log(req.cookies);
-  next();
-});
+
 
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/api/v1/course", courseRoutes)
+app.use("/api/v1/module", moduleRoutes)
+app.use("/api/v1/project", projectRoutes)
+app.use("/api/v1/pmarks", projectMarksRoutes)
+app.use("/api/v1/task", taskRoutes)
+app.use("/api/v1/event", eventRoutes)
+app.use("/api/v1/user", userRoutes)
 
 
 app.listen(port, () => {

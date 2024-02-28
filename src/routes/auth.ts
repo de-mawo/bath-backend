@@ -11,8 +11,8 @@ router.get("/login", (req, res) => {
 
 // logout
 router.get("/logout", (req, res, done) => {
-  req.logout(done)
-  res.redirect(process.env.CLIENT_URL as string)
+  req.logout(done);
+  res.redirect(process.env.CLIENT_URL as string);
 });
 
 //Google auth
@@ -35,10 +35,8 @@ router.get("/session", (req, res) => {
   try {
     if (req.user) {
       const { id, name, email, image, role } = req.user as User; // Do not send the id in a production app , this is used for learning purposes
-      const filteredUser = { id, name, email, image, role };
-      res.send({
-        user: filteredUser,
-      });
+      const user = { id, name, email, image, role };
+      res.send(user);
     } else {
       // Handle the case where req.user is undefined
       res.status(404).json({ error: "User not found" });
