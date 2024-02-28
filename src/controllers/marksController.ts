@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../utils/prisma";
 import { TaskObject, calculateTotal, calculateTotalMarks } from "../utils/calc";
+import { User } from "@prisma/client";
 
 type CreateProjectMarksData = {
   links: string[];
@@ -129,6 +130,58 @@ export async function calcUpdateMarks(
     return res.json({ message: "Success" }).status(200);
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ error });
+  }
+}
+
+export async function userModuleMarks(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const user = req.user as User;
+  const userId = user.id as string;
+  try {
+    const marks = await prisma.moduleMarks.findMany({
+      where: {
+        userId,
+      },
+    });
+    return res.json(marks).status(200);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+}
+
+
+export async function getOneProjectMarksData(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const user = req.user as User;
+  const userId = user.id as string;
+  const params = req.params
+  const projectId = params.id
+
+  console.log(projectId);
+  
+  try {
+    const marks = await prisma.projectMarks.findFirst({
+      where: {
+        userId: {
+          equals: userId,
+        },
+        projectId: {
+          equals: projectId,
+        },
+      },
+    });
+
+    return res.json(marks).status(200);
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ error });
   }
 }

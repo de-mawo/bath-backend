@@ -21,6 +21,24 @@ type EmploymentStatusData = {
   employmentStatus: EmploymentStatus;
 };
 
+export async function getMe(req: Request, res: Response, next: NextFunction) {
+  const params = req.params;
+  const { email } = params;
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    return res.json(user).status(200);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+}
+
 export async function adminEditUser(
   req: Request,
   res: Response,

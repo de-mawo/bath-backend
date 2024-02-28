@@ -54,6 +54,33 @@ export async function createTask(
   }
 }
 
+
+export const getProjectTaskData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const params = req.params;
+  const id = params.id as string;
+
+  try {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId: id,
+      }, orderBy: {
+        number: "asc"
+      }
+    });
+
+    return res.status(200).json(tasks);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Server Error",
+    });
+  }
+};
+
 export const getAllTasks = async (
   req: Request,
   res: Response,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../utils/prisma";
 import slugify from "slugify";
+import { User } from "@prisma/client";
 
 type CreateProjectData = {
   title: string;
@@ -16,8 +17,6 @@ type CreateProjectData = {
   endDate: string;
   courseCode: string;
 };
-
-
 
 export async function createProject(
   req: Request,
@@ -68,6 +67,56 @@ export async function createProject(
   }
 }
 
+export const getMyProjects = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user as User;
+  const courseCode = user.course as string;
+
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        courseCode,
+      },
+      orderBy: {
+        startDate: "asc",
+      },
+    });
+
+    return res.status(200).json(projects);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Server Error",
+    });
+  }
+};
+
+export const getProject = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const params = req.params;
+  const id = params.id as string;
+
+  try {
+    const project = await prisma.project.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return res.status(200).json(project);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Server Error",
+    });
+  }
+};
 
 export const getAllProjects = async (
   req: Request,

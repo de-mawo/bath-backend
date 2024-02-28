@@ -36,10 +36,12 @@ passport.use(
       const image = extractImage(profile);
 
       try {
-        const allowedEmails = await getAllowedEmails();
-        if (!allowedEmails.includes(email)) {
-          done(null);
-        }
+
+        //TODO: Bug Fix for checking allowed users
+        // const allowedEmails = await getAllowedEmails();
+        // if (!allowedEmails.includes(email)) {
+        //   done(null);
+        // }
 
         const userExist = await prisma.user.findUnique({
           where: {

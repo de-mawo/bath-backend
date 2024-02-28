@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import prisma from "../utils/prisma";
+import { User } from "@prisma/client";
 
 type CreateEventData = {
   title: string;
@@ -64,19 +65,20 @@ export const getMyEvents = async (
   res: Response,
   next: NextFunction
 ) => {
+  const user = req.user as User;
+  const course = user.course as string;
+
   try {
-    const body: GetMyEventData = await req.body;
-
-    const { courseCode } = body;
-
     const events = await prisma.events.findMany({
       where: {
-        course: courseCode,
+        course: course
       },
       orderBy: {
         startDate: "asc",
       },
     });
+
+    
     return res.status(200).json(events);
   } catch (error) {
     console.error(error);

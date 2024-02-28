@@ -6,6 +6,7 @@ import {
   editMe,
   editMyEmploymentStatus,
   allowedEmails,
+  getMe,
 } from "../controllers/userController";
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.route("/").get(isAdmin, getAllUsers);
 router.route("/admin").patch(isAdmin, adminEditUser);
 
 router.route("/allowed").patch(isAdmin, allowedEmails);
+
+router.route("/:email").get(isUser, getMe);
 
 router.route("/me").patch(isUser, editMe);
 
