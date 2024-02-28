@@ -8,7 +8,7 @@ import authRoutes from "./routes/auth";
 import courseRoutes from "./routes/course";
 import moduleRoutes from "./routes/module";
 import projectRoutes from "./routes/project";
-import projectMarksRoutes from "./routes/projectMarks";
+import marksRoutes from "./routes/marks";
 import taskRoutes from "./routes/task";
 import eventRoutes from "./routes/event";
 import userRoutes from "./routes/user";
@@ -66,7 +66,7 @@ app.use("/auth", authRoutes);
 app.use("/api/v1/course", courseRoutes)
 app.use("/api/v1/module", moduleRoutes)
 app.use("/api/v1/project", projectRoutes)
-app.use("/api/v1/pmarks", projectMarksRoutes)
+app.use("/api/v1/marks", marksRoutes)
 app.use("/api/v1/task", taskRoutes)
 app.use("/api/v1/event", eventRoutes)
 app.use("/api/v1/user", userRoutes)

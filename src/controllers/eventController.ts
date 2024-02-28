@@ -11,6 +11,10 @@ type CreateEventData = {
   endDate: string;
 };
 
+type GetMyEventData = {
+  courseCode: string;
+};
+
 export async function createEvent(
   req: Request,
   res: Response,
@@ -55,4 +59,29 @@ export const getAllEvents = async (
   }
 };
 
+export const getMyEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body: GetMyEventData = await req.body;
 
+    const { courseCode } = body;
+
+    const events = await prisma.events.findMany({
+      where: {
+        course: courseCode,
+      },
+      orderBy: {
+        startDate: "asc",
+      },
+    });
+    return res.status(200).json(events);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "Server Error",
+    });
+  }
+};

@@ -104,3 +104,40 @@ export const getAllUsers = async (
     });
   }
 };
+
+type AddEmailAllowed = {
+  email: string;
+};
+
+export async function allowedEmails(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const body: AddEmailAllowed = await req.body;
+    const { email } = body;
+
+    const allowed = await prisma.allowedEmails.findMany({});
+    const emails = allowed[0].emails;
+    const allowedId = allowed[0].id;
+
+    if (emails.includes(email)) {
+      return res.json("Email Already Exist");
+    }
+    let updatetryEntry = [...(emails || [])];
+
+    updatetryEntry.push(email);
+
+    await prisma.allowedEmails.update({
+      where: { id: allowedId },
+      data: {
+        emails: updatetryEntry,
+      },
+    });
+    return res.json({ message: "Success" }).status(200);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+}

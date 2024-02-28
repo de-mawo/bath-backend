@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
 import prisma from "./prisma";
+import { getAllowedEmails } from "./getAllowed";
 
 const extractEmail = (profile: Profile): string | null => {
   if (profile.emails && profile.emails.length > 0) {
@@ -22,8 +23,6 @@ type User = {
   id?: string;
 };
 
-
-
 passport.use(
   new GoogleStrategy(
     {
@@ -33,11 +32,15 @@ passport.use(
       //   passReqToCallback: true,
     },
     async function (accessToken, refreshToken, profile, done) {
-      
       const email = extractEmail(profile) as string;
       const image = extractImage(profile);
 
       try {
+        const allowedEmails = await getAllowedEmails();
+        if (!allowedEmails.includes(email)) {
+          done(null);
+        }
+
         const userExist = await prisma.user.findUnique({
           where: {
             googleId: profile.id,

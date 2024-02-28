@@ -11,3 +11,7 @@
 - Postgresql as a database
 - Docker for containerization
 - Passportjs for social login
+
+
+### Usage
+- First create an allowed emails entry into your Database and and the admin email
